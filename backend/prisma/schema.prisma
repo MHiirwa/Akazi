@@ -1,0 +1,202 @@
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  runtime      = "nodejs"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+enum Role {
+  JOB_SEEKER
+  EMPLOYER
+  ADMIN
+}
+enum EmployerStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum JobStatus {
+  DRAFT
+  PUBLISHED
+  REMOVED
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  WITHDRAWN
+  REVIEWED
+  REJECTED
+  ACCEPTED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String?
+  fullName  String
+  role      Role
+  isSuspended Boolean @default(false)
+  googleId  String?  @unique
+  avatarUrl String?
+  avatarPublicId String?
+  phone     String?
+  skills    String[] @default([])
+  resumeUrl      String?
+  resumePublicId String?
+  availableForFreelance Boolean @default(false)
+  headline  String?
+  bio       String?
+  location  String?
+  website   String?
+  experiences Json @default("[]")
+  projects    Json @default("[]")
+  employerStatus EmployerStatus @default(PENDING)
+  resetTokenHash      String?
+  resetTokenExpiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  jobsPosted   Job[]         @relation("EmployerJobs")
+  applications Application[]
+  reviewsReceived Review[] @relation("EmployerReviews")
+  reviewsWritten  Review[] @relation("AuthoredReviews")
+  notifications Notification[]
+  savedJobs     SavedJob[]
+  documents     SeekerDocument[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model Job {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  location    String
+  industry    String
+  jobType     String
+  salaryMin   Int?
+  salaryMax   Int?
+  status      JobStatus @default(PUBLISHED)
+  remote        Boolean  @default(false)
+  openings      Int?
+  deadline      DateTime?
+  requiredSkills String[] @default([])
+
+  employer   User   @relation("EmployerJobs", fields: [employerId], references: [id])
+  employerId String
+
+  applications Application[]
+  savedBy      SavedJob[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([location])
+  @@index([industry])
+  @@index([status])
+  @@index([jobType])
+  @@index([salaryMin])
+  @@map("jobs")
+}
+
+model Application {
+  id     String            @id @default(uuid())
+  status ApplicationStatus @default(SUBMITTED)
+  coverLetter String?
+  shortlisted Boolean @default(false)
+  employerNote String?
+  rejectionReason String?
+  interviewAt       DateTime?
+  interviewLocation String?
+  interviewNote     String?
+
+  job   Job    @relation(fields: [jobId], references: [id])
+  jobId String
+
+  applicant   User   @relation(fields: [applicantId], references: [id])
+  applicantId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([jobId, applicantId])
+  @@map("applications")
+}
+model JobAlert {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  keyword    String?
+  location   String?
+  jobType    String?
+  active     Boolean  @default(true)
+  unsubToken String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("job_alerts")
+}
+model Review {
+  id      String @id @default(uuid())
+  rating  Int
+  comment String
+
+  employer   User   @relation("EmployerReviews", fields: [employerId], references: [id])
+  employerId String
+
+  author   User   @relation("AuthoredReviews", fields: [authorId], references: [id])
+  authorId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([employerId, authorId])
+  @@index([employerId])
+  @@index([authorId])
+  @@map("reviews")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      String
+  message   String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("notifications")
+}
+
+model SavedJob {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  job    Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId  String
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@map("saved_jobs")
+}
+
+model SeekerDocument {
+  id       String @id @default(uuid())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  name     String
+  url      String
+  publicId String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("seeker_documents")
+}

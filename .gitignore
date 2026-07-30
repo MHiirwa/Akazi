@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets — NEVER commit these
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Prisma generated client (regenerated on install)
+backend/src/generated/
