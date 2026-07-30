@@ -7,7 +7,7 @@
   "scripts": {
     "predev": "npm run stop",
     "dev": "nodemon",
-    "build": "tsc",
+    "build": "prisma generate",
     "dev:tsx": "tsx watch src/index.js",
     "stop": "pkill -9 -f 'tsx watch src/index.js' 2>/dev/null; pkill -9 -f 'prototype/backend/node_modules/.bin/nodemon' 2>/dev/null; lsof -ti:${PORT:-3000} | xargs kill -9 2>/dev/null || true",
     "start": "tsx src/index.js",
