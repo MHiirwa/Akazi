@@ -17,6 +17,10 @@ const options = {
     },
     servers: [
       {
+        url: "https://akazi-s3zl.onrender.com/api",
+        description: "Production server (Render)",
+      },
+      {
         url: `http://localhost:${process.env.PORT || 3e3}/api`,
         description: "Local development server",
       },

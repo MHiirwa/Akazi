@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { landingPathForRole } from "../constants/roles";
 import AuthVisual from "../components/AuthVisual";
 import GoogleAuthButton from "../components/GoogleAuthButton";
+import PasswordInput from "../components/PasswordInput";
 
 export default function Login() {
   const { login } = useAuth();
@@ -75,9 +76,8 @@ export default function Login() {
               <label htmlFor="password">Password</label>
               <Link to="/forgot-password" className="field-link">Forgot password?</Link>
             </div>
-            <input
+            <PasswordInput
               id="password"
-              type="password"
               required
               autoComplete="current-password"
               aria-invalid={error ? true : undefined}

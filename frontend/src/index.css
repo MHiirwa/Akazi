@@ -230,6 +230,40 @@ a {
   border-color: #111;
 }
 
+/* Password field with a Show / Hide toggle so people can see what they type. */
+.password-field {
+  position: relative;
+}
+
+.field .password-field input {
+  padding-right: 66px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2f6f75;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.password-toggle:hover {
+  text-decoration: underline;
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+
 /* two inputs side by side (First / Last name) */
 .auth-row {
   display: grid;

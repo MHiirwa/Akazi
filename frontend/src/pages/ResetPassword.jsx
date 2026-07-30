@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { api } from "../api/client";
 import AuthVisual from "../components/AuthVisual";
+import PasswordInput from "../components/PasswordInput";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -80,9 +81,8 @@ export default function ResetPassword() {
 
             <div className="field">
               <label htmlFor="password">New password</label>
-              <input
+              <PasswordInput
                 id="password"
-                type="password"
                 required
                 autoComplete="new-password"
                 value={form.password}
@@ -93,9 +93,8 @@ export default function ResetPassword() {
 
             <div className="field">
               <label htmlFor="confirm">Confirm password</label>
-              <input
+              <PasswordInput
                 id="confirm"
-                type="password"
                 required
                 autoComplete="new-password"
                 value={form.confirm}

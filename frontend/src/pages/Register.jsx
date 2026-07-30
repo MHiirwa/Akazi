@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { landingPathForRole } from "../constants/roles";
 import AuthVisual from "../components/AuthVisual";
 import GoogleAuthButton from "../components/GoogleAuthButton";
+import PasswordInput from "../components/PasswordInput";
 
 const ROLES = [
   { value: "JOB_SEEKER", label: "Job seeker" },
@@ -133,9 +134,8 @@ export default function Register() {
 
           <div className="field">
             <label htmlFor="password">Password</label>
-            <input
+            <PasswordInput
               id="password"
-              type="password"
               required
               minLength={8}
               autoComplete="new-password"
@@ -149,9 +149,8 @@ export default function Register() {
 
           <div className="field">
             <label htmlFor="confirmPassword">Confirm password</label>
-            <input
+            <PasswordInput
               id="confirmPassword"
-              type="password"
               required
               minLength={8}
               autoComplete="new-password"
